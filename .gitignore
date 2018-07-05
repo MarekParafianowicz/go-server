@@ -2,6 +2,7 @@
 *.o
 *.a
 *.so
+go-server
 
 # Folders
 _obj

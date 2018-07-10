@@ -14,5 +14,6 @@ func main() {
 	fmt.Printf("Serving on port 8080")
 	http.HandleFunc("/", pages.Index)
 	http.HandleFunc("/sites", sites.Index)
+	http.HandleFunc("/sites/show", sites.Show)
 	http.ListenAndServe(":8080", nil)
 }

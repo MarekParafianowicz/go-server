@@ -20,7 +20,6 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	sites, err := allSites()
 	if err != nil {
 		http.Error(w, http.StatusText(500), http.StatusInternalServerError)
-		fmt.Println(err)
 		return
 	}
 
@@ -28,7 +27,6 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	json, err := json.Marshal(sitesMessage)
 	if err != nil {
 		http.Error(w, "JSON serialization error", 500)
-		fmt.Println(err)
 		return
 	}
 
@@ -62,7 +60,29 @@ func Show(w http.ResponseWriter, r *http.Request) {
 	json, err := json.Marshal(site)
 	if err != nil {
 		http.Error(w, "JSON serialization error", 500)
-		fmt.Println(err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	fmt.Fprintf(w, string(json))
+}
+
+func Create(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
+		http.Error(w, http.StatusText(405), http.StatusMethodNotAllowed)
+		return
+	}
+
+	site, err := createSite(r)
+
+	if err != nil {
+		http.Error(w, http.StatusText(500), http.StatusInternalServerError)
+		return
+	}
+
+	json, err := json.Marshal(site)
+	if err != nil {
+		http.Error(w, "JSON serialization error", 500)
 		return
 	}
 

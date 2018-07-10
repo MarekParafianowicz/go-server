@@ -1,6 +1,8 @@
 package sites
 
 import (
+	"net/http"
+
 	"github.com/marekparafianowicz/go-server/config"
 )
 
@@ -36,4 +38,25 @@ func findSite(id string) (site, error) {
 	site := site{}
 	err := row.Scan(&site.ID, &site.URL)
 	return site, err
+}
+
+func createSite(r *http.Request) (site, error) {
+	site := site{}
+	url := r.FormValue("url")
+	if url == "" {
+		return site, nil
+	}
+
+	row := config.DB.QueryRow("SELECT * FROM sites WHERE url = $1", url)
+	err := row.Scan(&site.ID, &site.URL)
+	if err == nil {
+		return site, err
+	}
+
+	err = config.DB.QueryRow("INSERT INTO sites (url) VALUES ($1) RETURNING id", url).Scan(&site.ID)
+	if err != nil {
+		return site, err
+	}
+	site.URL = url
+	return site, nil
 }

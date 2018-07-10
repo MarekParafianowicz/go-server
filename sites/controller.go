@@ -73,7 +73,15 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	site, err := createSite(r)
+	decoder := json.NewDecoder(r.Body)
+
+	atr := make(map[string]string)
+	err := decoder.Decode(&atr)
+	if err != nil {
+		panic(err)
+	}
+
+	site, err := createSite(atr)
 
 	if err != nil {
 		http.Error(w, http.StatusText(500), http.StatusInternalServerError)

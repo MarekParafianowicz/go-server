@@ -1,5 +1,5 @@
 package pages
 
-type Message struct {
-	Data string
+type message struct {
+	Data string `json:"data"`
 }

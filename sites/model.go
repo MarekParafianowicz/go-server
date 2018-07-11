@@ -38,30 +38,31 @@ func findSite(id string) (site, error) {
 	return site, err
 }
 
-func createSite(atr map[string]string) (site, error) {
-	site := site{URL: atr["url"]}
+func createSite(url string) (site, error) {
+	st := site{}
 
-	row := config.DB.QueryRow("SELECT * FROM sites WHERE url = $1", site.URL)
-	err := row.Scan(&site.ID, &site.URL)
-	if err == nil {
-		panic(err)
+	row := config.DB.QueryRow("SELECT * FROM sites WHERE url = $1", url)
+	err := row.Scan(&st.ID, &st.URL)
+	if st.URL != "" {
+		return site{}, nil // Here implement our own error
 	}
 
-	err = config.DB.QueryRow("INSERT INTO sites (url) VALUES ($1) RETURNING id", site.URL).Scan(&site.ID)
+	st.URL = url
+	err = config.DB.QueryRow("INSERT INTO sites (url) VALUES ($1) RETURNING id", st.URL).Scan(&st.ID)
 	if err != nil {
-		return site, err
+		return st, err
 	}
-	return site, nil
+	return st, nil
 }
 
-func updateSite(atr map[string]string) (site, error) {
+func updateSite(id, url string) (site, error) {
 	query := "UPDATE sites SET url = $2	WHERE id = $1 RETURNING id, url"
 	st := site{}
-	err := config.DB.QueryRow(query, atr["id"], atr["url"]).Scan(&st.ID, &st.URL)
+	err := config.DB.QueryRow(query, id, url).Scan(&st.ID, &st.URL)
 	if err != nil {
 		panic(err)
 	}
-	if st.URL != atr["url"] {
+	if st.URL != url {
 		return site{}, nil // Here implement our own error
 	}
 	return st, nil

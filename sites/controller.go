@@ -97,3 +97,34 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	fmt.Fprintf(w, string(json))
 }
+
+func Update(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "PATCH" && r.Method != "PUT" {
+		http.Error(w, http.StatusText(405), http.StatusMethodNotAllowed)
+		return
+	}
+
+	decoder := json.NewDecoder(r.Body)
+
+	atr := make(map[string]string)
+	err := decoder.Decode(&atr)
+	if err != nil {
+		panic(err)
+	}
+
+	site, err := updateSite(atr)
+
+	if err != nil {
+		http.Error(w, http.StatusText(500), http.StatusInternalServerError)
+		return
+	}
+
+	json, err := json.Marshal(site)
+	if err != nil {
+		http.Error(w, "JSON serialization error", 500)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	fmt.Fprintf(w, string(json))
+}

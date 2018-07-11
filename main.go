@@ -16,5 +16,6 @@ func main() {
 	http.HandleFunc("/sites", sites.Index)
 	http.HandleFunc("/sites/show", sites.Show)
 	http.HandleFunc("/sites/create", sites.Create)
+	http.HandleFunc("/sites/update", sites.Update)
 	http.ListenAndServe(":8080", nil)
 }

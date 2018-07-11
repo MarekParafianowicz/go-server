@@ -55,7 +55,6 @@ func createSite(atr map[string]string) (site, error) {
 }
 
 func updateSite(atr map[string]string) (site, error) {
-	// site := site{ID: int(atr["id"]), URL: atr["url"]}
 	query := "UPDATE sites SET url = $2	WHERE id = $1 RETURNING id, url"
 	st := site{}
 	err := config.DB.QueryRow(query, atr["id"], atr["url"]).Scan(&st.ID, &st.URL)
@@ -66,4 +65,20 @@ func updateSite(atr map[string]string) (site, error) {
 		return site{}, nil // Here implement our own error
 	}
 	return st, nil
+}
+
+func deleteSite(id string) error {
+	row := config.DB.QueryRow("SELECT * FROM sites WHERE id = $1", id)
+	site := site{}
+	err := row.Scan(&site.ID, &site.URL)
+	if err != nil {
+		return err
+	}
+
+	query := "DELETE FROM sites WHERE id = $1"
+	_, err = config.DB.Exec(query, id)
+	if err != nil {
+		return err
+	}
+	return nil
 }

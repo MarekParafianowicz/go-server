@@ -4,9 +4,10 @@ import (
 	"database/sql"
 	"fmt"
 
-	_ "github.com/lib/pq"
+	_ "github.com/lib/pq" //Needed to setup DB
 )
 
+// DB is open pg connection to be used in models
 var DB *sql.DB
 
 func init() {

@@ -31,7 +31,8 @@ func allSites() ([]site, error) {
 	return sites, nil
 }
 
-func findSite(id string) (site, error) {
+// FindSite queries single site form DB
+func FindSite(id string) (site, error) {
 	row := config.DB.QueryRow("SELECT * FROM sites WHERE id = $1", id)
 	site := site{}
 	err := row.Scan(&site.ID, &site.URL)

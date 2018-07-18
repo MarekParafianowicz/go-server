@@ -7,10 +7,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type sitesMessage struct {
-	Sites []site `json:"sites_attr"`
-}
-
 // Index renders all sites (TODO: pagination!)
 func Index(c *gin.Context) {
 
@@ -26,7 +22,7 @@ func Index(c *gin.Context) {
 // Show renders single site
 func Show(c *gin.Context) {
 	id := c.Param("id")
-	site, err := findSite(id)
+	site, err := FindSite(id)
 
 	switch {
 	case err == sql.ErrNoRows:

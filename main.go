@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/marekparafianowicz/go-server/analysis"
 	"github.com/marekparafianowicz/go-server/pages"
 	"github.com/marekparafianowicz/go-server/sites"
 
@@ -18,6 +19,8 @@ func main() {
 	router.POST("/sites", sites.Create)
 	router.PUT("/sites/:id", sites.Update)
 	router.DELETE("/sites/:id", sites.Delete)
+
+	router.POST("/sites/:id/analysis", analysis.Create)
 
 	router.Run()
 }

@@ -1,18 +1,24 @@
-package analysis
+package handlers
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/marekparafianowicz/go-server/sites"
+	"github.com/marekparafianowicz/go-server/pkg/repository"
 )
 
-// Create crawls Site, fetch all H1 tags and render them
-func Create(c *gin.Context) {
+type ShowSite struct {
+	r repository.Repository
+}
+
+func NewShowSite(r repository.Repository) *ShowSite {
+	return &ShowSite{r}
+}
+
+func (ss *ShowSite) Handle(c *gin.Context) {
 	id := c.Param("id")
-	site, err := sites.FindSite(id)
+	site, err := ss.r.FindSite(id)
 
 	switch {
 	case err == sql.ErrNoRows:
@@ -23,8 +29,5 @@ func Create(c *gin.Context) {
 		return
 	}
 
-	tags := downloader(site.URL)
-	fmt.Println(tags)
-
-	c.JSON(200, tags)
+	c.JSON(200, site)
 }

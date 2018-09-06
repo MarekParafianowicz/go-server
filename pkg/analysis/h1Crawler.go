@@ -60,7 +60,7 @@ func tagReader(resp *http.Response) []H1tag {
 	return tags
 }
 
-func downloader(url string) []H1tag {
+func Downloader(url string) []H1tag {
 	page, err := http.Get(url)
 	if err != nil {
 		log.Debugf("Error: %s", err)

@@ -3,6 +3,7 @@
 *.a
 *.so
 go-server
+cmd/cmd
 
 # Folders
 _obj

@@ -2,6 +2,8 @@ package repository
 
 import (
 	"database/sql"
+	"fmt"
+	"time"
 
 	_ "github.com/lib/pq"
 )
@@ -13,12 +15,17 @@ type PostgresRepository struct {
 
 // New creates an instance of Repository with the given driver and dataSource names
 func New(driverName, dataSourceName string) (*PostgresRepository, error) {
-	connection, err := sql.Open(driverName, dataSourceName)
-	if err != nil {
-		return nil, err
-	}
+	var err error
+	for i := 0; i < 10; i++ {
+		connection, err := sql.Open(driverName, dataSourceName)
+		if err == nil {
+			return &PostgresRepository{connection: connection}, nil
+		}
 
-	return &PostgresRepository{connection: connection}, nil
+		fmt.Println("Waiting for DB Connection")
+		time.Sleep(1 * time.Second)
+	}
+	return nil, err
 }
 
 // AllSites returns all sites form DB

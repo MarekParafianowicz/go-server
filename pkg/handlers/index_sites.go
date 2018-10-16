@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -18,6 +19,7 @@ func NewIndexSites(r repository.Repository) *IndexSites {
 func (is *IndexSites) Handle(c *gin.Context) {
 	sites, err := is.r.AllSites()
 	if err != nil {
+		log.Fatal(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

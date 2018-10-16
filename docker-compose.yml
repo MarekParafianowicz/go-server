@@ -1,0 +1,16 @@
+version: '2'
+services:
+    go-server:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - "8080:8080"
+        depends_on:
+            - postgres
+        links:
+            - postgres
+    postgres:
+        image: postgres:9.6.7
+        ports:
+            - "5432:5432"

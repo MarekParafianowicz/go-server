@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	repository, err := repository.New("postgres", "postgres://marekparafianowicz:password@localhost/go-server?sslmode=disable")
+	repository, err := repository.New("postgres", "postgres://postgres:password@postgres/go-server?sslmode=disable")
 	if err != nil {
 		log.Fatal(err)
 	}
